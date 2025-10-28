@@ -40,7 +40,7 @@ contract Raffle {
     }
 
     modifier onlyOwner() {
-        if (i_owner == msg.sender) revert Raffle__NotOwner();
+        if (i_owner != msg.sender) revert Raffle__NotOwner();
         _;
     }
 
