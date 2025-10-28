@@ -40,7 +40,7 @@ contract Raffle {
     }
 
     modifier onlyOwner() {
-        if(i_owner == msg.sender) revert Raffle__NotOwner();
+        if (i_owner == msg.sender) revert Raffle__NotOwner();
         _;
     }
 
@@ -71,7 +71,7 @@ contract Raffle {
         return s_raffleGameState;
     }
 
-    function getOwner() external view returns(address){
+    function getOwner() external view returns (address) {
         return i_owner;
     }
 
