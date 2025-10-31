@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.30;
 
-import {Script} from "forge-std/Script.sol";
+import {Script, console} from "forge-std/Script.sol";
+import {VRFCoordinatorV2_5Mock} from "../test/mocks/VRFCoordinatorV2_5Mock.sol";
+import {LinkToken} from "../test/mocks/LinkToken.sol";
 
 /**
  * @title HelperConfig
@@ -189,21 +191,35 @@ contract HelperConfig is Script {
             return activeNetworkConfig;
         }
 
-        // TODO: Deploy mocks here
-        // 1. Deploy MockLinkToken
-        // 2. Deploy VRFCoordinatorV2_5Mock
-        // 3. Create subscription
-        // 4. Fund subscription
+        console.log("Deploying mocks for local Anvil chain...");
 
-        // For now, return placeholder config
+        // Deploy mocks
+        vm.startBroadcast();
+
+        // 1. Deploy LINK token mock
+        LinkToken linkToken = new LinkToken();
+
+        // 2. Deploy VRF Coordinator mock
+        // Constructor params: baseFee, gasPriceLink
+        VRFCoordinatorV2_5Mock vrfCoordinator = new VRFCoordinatorV2_5Mock(
+            0.25 ether, // base fee
+            1e9 // gas price (1 gwei)
+        );
+
+        vm.stopBroadcast();
+
+        console.log("Mocks deployed!");
+        console.log("LINK Token:", address(linkToken));
+        console.log("VRF Coordinator:", address(vrfCoordinator));
+
         return NetworkConfig({
             entranceFee: DEFAULT_ENTRANCE_FEE,
             interval: DEFAULT_INTERVAL,
-            vrfCoordinator: address(0), // Deploy mock
+            vrfCoordinator: address(vrfCoordinator),
             gasKeyHash: 0x787d74caea10b2b357790d5b5247c2f63d1d91572a9846f780606e4d953677ae,
-            subscriptionId: 0,
+            subscriptionId: 0, // Will be created in deployment script
             callbackGasLimit: DEFAULT_CALLBACK_GAS_LIMIT,
-            link: address(0), // Deploy mock
+            link: address(linkToken),
             account: 0x643315C9Be056cDEA171F4e7b2222a4ddaB9F88D
         });
     }
