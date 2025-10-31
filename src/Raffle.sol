@@ -266,7 +266,7 @@ contract Raffle is VRFConsumerBaseV2Plus {
      * @dev Changes state from CLOSED to OPEN
      * @dev Reverts if raffle is already started
      */
-    function startRaffle() external onlyOwner {
+    function startRaffle() external onlyTheOwner {
         if (s_raffleGameState != RaffleGameState.CLOSED) {
             revert Raffle__GameAlreadyStarted();
         }
